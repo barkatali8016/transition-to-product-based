@@ -1,3 +1,18 @@
+const OPTIONS = [
+  {
+    id: 1,
+    title: "Sales Manager",
+  },
+  {
+    id: 2,
+    title: "Support Specialist",
+  },
+  {
+    id: 3,
+    title: "Research Analyst",
+  },
+];
+
 (async () => {
   const response = await fetch("https://dummyjson.com/users");
   const userResponse = await response.json();
@@ -8,6 +23,7 @@
   let selectedEmployee = employeesData[0];
 
   const employeeList = document.querySelector(".employee__name--list");
+
   employeeList.addEventListener("click", (event) => {
     const empId = parseInt(event.target.id, 10);
     if (event.target.tagName === "DIV") {
@@ -17,6 +33,7 @@
         renderSingleEmployee(selectedEmp);
       }
     }
+
     if (event.target.tagName === "BUTTON") {
       const selectedEmpIndex = employeesData.findIndex(
         (emp) => emp.id === empId
@@ -77,18 +94,28 @@
     const employeeImg =
       employee.image ||
       "https://www.shutterstock.com/image-vector/vector-design-avatar-dummy-sign-600nw-1290556063.jpg";
+    const defaultImage =
+      "https://www.shutterstock.com/image-vector/vector-design-avatar-dummy-sign-600nw-1290556063.jpg";
     const fullnameWithAge = `${employee.firstName} ${employee.lastName} (${employee.age})`;
     const id = employee.id;
     const designation = employee.company.title;
-    const formattedAddress = `${employee.address.address}, ${employee.address.city}, ${employee.address.state}, ${employee.address.country}, ${employee.address.postalCode}`;
+    const formattedAddress = [
+      employee.address.address,
+      employee.address.city,
+      employee.address.state,
+      employee.address.country,
+      employee.address.postalCode,
+    ]
+      .filter(Boolean)
+      .join(", ");
 
     singleEmployee.innerHTML = `
-    <div class="employee__single--info">
           <img
             loading="lazy"
             class="employee__single--info--img"
             src="${employeeImg}"
             alt="employee image"
+            onerror="${defaultImage}"
           />
           <div class="employee__single--info--text">
             <span class="employee__single--info-name">${fullnameWithAge}</span>
@@ -100,7 +127,62 @@
               >Address: ${formattedAddress}</span
             >
           </div>
-        </div>
    `;
   }
+
+  //   Handle add employee
+
+  const addEmployeeDialog = document.querySelector(".addEmployee");
+  const addEmployeeForm = document.querySelector(".addEmployee__form");
+  const addNewBtn = document.querySelector(".heading__addnew--btn");
+  const addEmployeeBtn = document.querySelector(".addEmployee__form--btn");
+  addEmployeeDialog.addEventListener("click", (event) => {
+    if (event.target.tagName === "DIV") {
+      addEmployeeDialog.style = "display:none";
+    }
+  });
+  addNewBtn.addEventListener("click", () => {
+    addEmployeeDialog.style = "display:flex";
+    const date = document.querySelector(".addEmployee__form--date");
+
+    date.max = `${new Date().getFullYear() - 18}-${new Date()
+      .toISOString()
+      .slice(5, 10)}`;
+  });
+  addEmployeeForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(addEmployeeForm);
+    const values = [...formData.entries()];
+    const employeeData = {};
+
+    values.forEach((value) => {
+      employeeData[value[0]] = value[1];
+    });
+    // address
+    const employee = {
+      id: employeesData.length + 1,
+      firstName: employeeData.firstName,
+      lastName: employeeData.lastName,
+      email: employeeData.email,
+      phone: employeeData.phone,
+      image: employeeData.image,
+      age:
+        new Date().getFullYear() - parseInt(employeeData.dob.slice(0, 4), 10),
+      dateOfBirth: employeeData.dob,
+      address: {
+        address: employeeData.address,
+      },
+      company: {
+        title: OPTIONS.find(
+          (option) => option.id === parseInt(employeeData.designation, 10)
+        ).title,
+      },
+    };
+    employeesData.unshift(employee);
+    addEmployeeForm.reset();
+    selectedEmployee = employeesData[0];
+    renderEmployee(employeesData, selectedEmployee);
+    addEmployeeDialog.style = "display:none";
+  });
 })();

@@ -10,7 +10,7 @@
     <header class="heading">
       <h1 class="heading__text">Employee Database Management System</h1>
       <div class="heading__addnew">
-        <button type="button">Add Employee</button>
+        <button class="heading__addnew--btn" type="button">Add Employee</button>
       </div>
     </header>
     <div class="employee">
@@ -22,24 +22,28 @@
       </section>
       <section class="employee__single">
         <h2 class="employee__single--heading">Employee Information</h2>
-        <div class="employee__single--info">
-          <img
-            class="employee__single--info--img"
-            src="https://www.shutterstock.com/image-vector/vector-design-avatar-dummy-sign-600nw-1290556063.jpg"
-            alt="employee image"
-          />
-          <div class="employee__single--info--text">
-            <span class="employee__single--info-name">Barkat Ali (27)</span>
-            <span class="employee__single--info-id">Employee Id: 01</span>
-            <span class="employee__single--info-designation"
-              >Designation: Software Engineer</span
-            >
-            <span class="employee__single--info-start-date"
-              >Joining Date: 01/12/2025</span
-            >
-          </div>
-        </div>
+        <div class="employee__single--info"></div>
       </section>
+    </div>
+    <div class="addEmployee">
+
+        <form class="addEmployee__form" id="addEmployee__form" name="addEmployee__form">
+            <label for="addEmployee__form">Add New Employee</label>
+            <input class="addEmployee__form--text" type="text" name="firstName" placeholder="Enter First Name" required>
+            <input class="addEmployee__form--text" type="text" name="lastName" placeholder="Enter Last Name" required>
+            <input class="addEmployee__form--text" type="text" name="email" placeholder="Enter Email" required>
+            <input class="addEmployee__form--text" type="text" name="phone" placeholder="Enter Phone" required>
+            <input class="addEmployee__form--text" type="text" name="image" placeholder="Enter Image Url" required>
+            <select class="addEmployee__form--select" type="text" name="designation" required>
+                <option value="">Choose Designation</option>
+                <option value="1">Sales Manager</option>
+                <option value="2">Support Specialist</option>
+                <option value="3">Research Analyst</option>
+            </selects>
+            <textarea class="addEmployee__form--address" name="address" id="address" placeholder="Enter Address" rows="5"></textarea>
+            <input  class="addEmployee__form--date" type="date" name="dob" required> 
+            <button class="addEmployee__form--btn">Add</button>
+        </form>
     </div>
     <script src="./index.js"></script>
   </body>
